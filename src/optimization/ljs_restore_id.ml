@@ -527,6 +527,9 @@ let rec restore_id (e : exp) : exp =
   let rec jump_env (e : exp) : exp =
     match e with
     | Let (p, "%context", Id (p1, c), body) ->
+      let newbody = restore_rec body names in
+      Let (p, "%context", Id (p1, c), newbody)
+      (*
       if (only_strict && c = "%strictContext") || (not only_strict) then
         begin 
           if eligible_for_restoration e then
@@ -543,7 +546,7 @@ let rec restore_id (e : exp) : exp =
         begin
           dprint_string "find nonstrict context. not eligible for restore...\n";
           e
-        end 
+        end *)
     | _ -> optimize jump_env e
   in
   let rec propagate_this (e : exp) (env : names_t) =
